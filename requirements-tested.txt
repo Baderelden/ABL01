@@ -1,0 +1,4 @@
+openai==2.54.0
+streamlit==1.64.0
+pydantic==2.13.5
+Pillow==12.3.0
