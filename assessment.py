@@ -151,9 +151,12 @@ def prepare_image(raw: bytes) -> bytes:
                 if getattr(source, 'is_animated', False):
                     raise ValueError('Animated images are not supported.')
                 im = ImageOps.exif_transpose(source).convert('RGB')
-                im.thumbnail((1600, 1600))
+                # Reduce image-token use while retaining enough detail for dents,
+                # cracks and damaged components. The API still receives the image
+                # with detail="high" below.
+                im.thumbnail((768, 768))
                 out = io.BytesIO()
-                im.save(out, 'JPEG', quality=90)  # Re-encode without EXIF/location metadata.
+                im.save(out, 'JPEG', quality=82, optimize=True)  # Strip EXIF/location metadata.
                 return out.getvalue()
     except (UnidentifiedImageError, OSError, Image.DecompressionBombError,
             Image.DecompressionBombWarning) as exc:
