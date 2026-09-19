@@ -1,3 +1,4 @@
+
 """Structured visual assessment; no uploads are written to disk."""
 import base64
 import io
