@@ -68,8 +68,16 @@ class Assessment(StrictModel):
     repair_size: RepairSize
     labour: Labour
     special_needs: list[SpecialNeed]
-    limitations: list[str]
-    additional_photos_needed: list[str]
+
+    # Compatibility properties for the existing Streamlit interface. They are
+    # deliberately excluded from the API response schema to reduce output.
+    @property
+    def limitations(self) -> list[str]:
+        return []
+
+    @property
+    def additional_photos_needed(self) -> list[str]:
+        return []
 
     @model_validator(mode='after')
     def consistent_status(self):
@@ -122,8 +130,9 @@ structural damage to classify clearly severe visible damage as Large. Do not cla
 chassis, engine, battery or suspension damage is confirmed unless actually visible.
 Give a short evidence-based explanation, supporting 1-based photo_numbers, and
 Low/Medium/High confidence in the size classification (not a calibrated probability).
-State uncertainty and useful additional views; distinguish visible facts from
-suspected hidden damage. Do not copy a size label suggested in user notes.
+Distinguish visible facts from suspected hidden damage. Do not provide a limitations
+section or request additional photographs. Do not copy a size label suggested in
+user notes.
 Estimate total active repair labour as a plausible minimum/maximum hour range,
 including bodywork, remove/refit and painting as appropriate, avoiding overlapping
 operations. These are rough visual estimates, not manufacturer labour times or
@@ -133,7 +142,7 @@ Special needs should cover relevant electric/hybrid high-voltage precautions,
 large/heavy vehicle facility requirements, possible sensor calibration or specialist
 work only when justified. Distinguish visible evidence, user supplied information,
 and needs confirmation. Never state roadworthiness or battery safety from photos.
-Include photo limitations and any additional views needed. No invented certainty.
+No invented certainty. Keep every explanation concise.
 '''
 
 
